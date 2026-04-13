@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aswin Ranjith — Senior Software Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+/* === RESET & BASE === */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0e14;--bg2:#0d1117;--bg3:#111720;--bg4:#161b22;
+  --fg:#b3b1ad;--fg-bright:#e6e1cf;
+  --green:#7fd962;--green-dim:#3d6e2e;--green-glow:rgba(127,217,98,0.08);
+  --amber:#e6b450;--cyan:#39bae6;--red:#f07178;
+  --magenta:#d2a6ff;--blue:#59c2ff;
+  --comment:#475266;--border:#1a1f29;--border2:#2d3440;
+  --font:'JetBrains Mono','Fira Code','Cascadia Code',monospace;
+  --ease:cubic-bezier(0.16,1,0.3,1);
+  --nav-bg:rgba(10,14,20,0.85);
+  --nav-mobile-bg:rgba(10,14,20,0.95);
+  --scanline:rgba(0,0,0,0.015);
+}
+[data-theme="light"]{
+  --bg:#f5f3ef;--bg2:#eae7e1;--bg3:#ddd9d2;--bg4:#d0ccc5;
+  --fg:#4a4540;--fg-bright:#1a1714;
+  --green:#2d7a1e;--green-dim:#a3d699;--green-glow:rgba(45,122,30,0.08);
+  --amber:#9a6e14;--cyan:#1a7a8a;--red:#c0392b;
+  --magenta:#7b4bb3;--blue:#2471a3;
+  --comment:#918a80;--border:#d5d0c8;--border2:#c0bab0;
+  --nav-bg:rgba(245,243,239,0.88);
+  --nav-mobile-bg:rgba(245,243,239,0.95);
+  --scanline:rgba(0,0,0,0.008);
+}
+html{font-size:16px;scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:var(--border2) var(--bg)}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);line-height:1.7;overflow-x:hidden}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+::selection{background:rgba(127,217,98,0.15);color:var(--green)}
+a{color:var(--cyan);text-decoration:none;transition:color .2s}
+a:hover{color:var(--blue)}
+
+/* === SCANLINE OVERLAY === */
+body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,var(--scanline) 2px,var(--scanline) 4px);
+}
+
+/* === SCROLL REVEAL === */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:.1s}
+.reveal-delay-2{transition-delay:.2s}
+.reveal-delay-3{transition-delay:.3s}
+.reveal-delay-4{transition-delay:.4s}
+.reveal-delay-5{transition-delay:.5s}
+
+/* === NAV === */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:var(--nav-bg);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  transition:transform .3s var(--ease);
+}
+nav.hidden{transform:translateY(-100%)}
+.nav-inner{
+  max-width:1100px;margin:0 auto;padding:14px 24px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.nav-logo{font-weight:600;font-size:.9rem;color:var(--green);letter-spacing:-.5px}
+.nav-logo span{color:var(--comment)}
+.nav-links{display:flex;gap:24px;list-style:none}
+.nav-links a{
+  color:var(--comment);font-size:.75rem;letter-spacing:.5px;text-transform:uppercase;
+  transition:color .2s;position:relative;
+}
+.nav-links a::before{
+  content:'>';position:absolute;left:-12px;color:var(--green);opacity:0;
+  transition:opacity .2s,transform .2s;transform:translateX(-4px);
+}
+.nav-links a:hover{color:var(--fg-bright)}
+.nav-links a:hover::before{opacity:1;transform:translateX(0)}
+.nav-hamburger{display:none;background:none;border:none;color:var(--green);font-size:1.3rem;cursor:pointer;font-family:var(--font)}
+
+/* Theme toggle */
+.theme-toggle{
+  background:none;border:1px solid var(--border2);border-radius:4px;
+  color:var(--fg);font-family:var(--font);font-size:.7rem;
+  padding:5px 10px;cursor:pointer;transition:all .25s var(--ease);
+  display:flex;align-items:center;gap:6px;white-space:nowrap;
+}
+.theme-toggle:hover{border-color:var(--green);color:var(--green)}
+.theme-toggle .toggle-icon{font-style:normal;font-size:.85rem;line-height:1}
+
+/* Smooth theme transition */
+html.theme-transitioning,
+html.theme-transitioning *,
+html.theme-transitioning *::before,
+html.theme-transitioning *::after{
+  transition:background .4s ease, color .4s ease, border-color .4s ease, box-shadow .4s ease !important;
+}
+
+@media(max-width:700px){
+  .nav-links{
+    display:none;position:absolute;top:100%;left:0;right:0;
+    flex-direction:column;background:var(--nav-mobile-bg);
+    border-bottom:1px solid var(--border);padding:16px 24px;gap:16px;
+  }
+  .nav-links.open{display:flex}
+  .nav-hamburger{display:block}
+}
+
+/* === HERO === */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;justify-content:center;
+  padding:120px 24px 80px;max-width:1100px;margin:0 auto;position:relative;
+}
+.hero-tag{
+  font-size:.75rem;color:var(--comment);letter-spacing:1px;text-transform:uppercase;
+  margin-bottom:16px;
+}
+.hero-tag span{color:var(--green)}
+.hero-name{
+  font-size:clamp(2.4rem,6vw,4.5rem);font-weight:700;color:var(--fg-bright);
+  line-height:1.1;letter-spacing:-2px;margin-bottom:12px;
+}
+.hero-name .accent{color:var(--green)}
+.hero-role{
+  font-size:clamp(1rem,2.5vw,1.4rem);color:var(--amber);font-weight:400;
+  margin-bottom:24px;
+}
+.hero-summary{
+  max-width:560px;color:var(--comment);font-size:.9rem;line-height:1.8;margin-bottom:40px;
+}
+.hero-summary strong{color:var(--fg);font-weight:500}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 24px;font-family:var(--font);font-size:.8rem;
+  border:1px solid var(--border2);border-radius:2px;
+  cursor:pointer;transition:all .25s var(--ease);
+}
+.btn-primary{background:var(--green);color:var(--bg);border-color:var(--green);font-weight:600}
+.btn-primary:hover{background:transparent;color:var(--green);box-shadow:0 0 20px var(--green-glow)}
+.btn-ghost{background:transparent;color:var(--fg);font-weight:400}
+.btn-ghost:hover{border-color:var(--fg-bright);color:var(--fg-bright)}
+
+/* Underscore blinking cursor */
+.cursor-blink{
+  display:inline-block;margin-left:2px;
+  color:var(--green);font-weight:400;
+  animation:blink 1s step-end infinite;
+}
+.cursor-blink::after{content:'_'}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* Typewriter section titles */
+.typewriter-title{
+  position:relative;display:inline-block;overflow:hidden;
+  white-space:nowrap;max-width:0;vertical-align:bottom;
+  transition:none;
+}
+.typewriter-title.typed{
+  animation:typeExpand 0.8s steps(20,end) forwards;
+}
+@keyframes typeExpand{
+  from{max-width:0}
+  to{max-width:600px}
+}
+.typewriter-title .t-cursor{
+  display:inline-block;margin-left:2px;
+  color:var(--green);font-weight:400;
+  animation:blink 1s step-end infinite;
+  opacity:0;
+}
+.typewriter-title .t-cursor::after{content:'_'}
+.typewriter-title.typed .t-cursor{opacity:1}
+
+/* Floating terminal prompt decoration */
+.hero-decoration{
+  position:absolute;right:24px;top:50%;transform:translateY(-50%);
+  color:var(--border2);font-size:.7rem;line-height:2;text-align:right;
+  display:none;
+}
+@media(min-width:900px){.hero-decoration{display:block}}
+
+/* === SECTIONS === */
+section{padding:100px 24px;max-width:1100px;margin:0 auto}
+.section-header{margin-bottom:56px}
+.section-label{
+  font-size:.7rem;color:var(--green);text-transform:uppercase;letter-spacing:2px;
+  margin-bottom:8px;display:flex;align-items:center;gap:10px;
+}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);max-width:200px}
+.section-title{
+  font-size:clamp(1.6rem,4vw,2.2rem);color:var(--fg-bright);font-weight:700;
+  letter-spacing:-1px;
+}
+
+/* === ABOUT === */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+@media(max-width:700px){.about-grid{grid-template-columns:1fr;gap:32px}}
+.about-text{color:var(--fg);font-size:.88rem;line-height:1.9}
+.about-text p+p{margin-top:16px}
+.about-text em{color:var(--cyan);font-style:normal}
+.about-card{
+  background:var(--bg2);border:1px solid var(--border);border-radius:4px;
+  overflow:hidden;
+}
+.about-card-bar{
+  display:flex;align-items:center;gap:6px;padding:10px 16px;
+  background:var(--bg3);border-bottom:1px solid var(--border);
+}
+.about-card-dot{width:10px;height:10px;border-radius:50%}
+.about-card-dot.r{background:#f07178}.about-card-dot.y{background:#e6b450}.about-card-dot.g{background:#7fd962}
+.about-card-title{margin-left:8px;font-size:.7rem;color:var(--comment)}
+.about-card-body{padding:20px;font-size:.8rem;line-height:2}
+.about-card-body .line{display:flex;gap:8px}
+.about-card-body .key{color:var(--amber);min-width:12ch}
+.about-card-body .val{color:var(--fg)}
+.about-card-body .val.hl{color:var(--green)}
+.about-card-body .comment{color:var(--comment);font-style:italic}
+
+/* === SKILLS === */
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+.skill-item{
+  background:var(--bg2);border:1px solid var(--border);border-radius:4px;
+  padding:20px;transition:border-color .3s,box-shadow .3s;
+}
+.skill-item:hover{border-color:var(--green-dim);box-shadow:0 0 30px var(--green-glow)}
+.skill-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.skill-name{font-size:.85rem;color:var(--fg-bright);font-weight:500}
+.skill-pct{font-size:.75rem;font-weight:600}
+.skill-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.skill-fill{height:100%;border-radius:2px;width:0;transition:width 1.2s var(--ease)}
+.skill-item.visible .skill-fill{width:var(--w)}
+.skill-tags{margin-top:10px;display:flex;gap:6px;flex-wrap:wrap}
+.skill-tag{font-size:.65rem;color:var(--comment);padding:2px 8px;background:var(--bg3);border-radius:2px}
+
+/* === EXPERIENCE === */
+.timeline{position:relative;padding-left:32px}
+.timeline::before{
+  content:'';position:absolute;left:7px;top:8px;bottom:8px;width:1px;background:var(--border);
+}
+.timeline-item{position:relative;margin-bottom:48px}
+.timeline-item:last-child{margin-bottom:0}
+.timeline-dot{
+  position:absolute;left:-32px;top:6px;width:15px;height:15px;
+  border-radius:50%;border:2px solid var(--green);background:var(--bg);
+  transition:background .3s,box-shadow .3s;
+}
+.timeline-item:hover .timeline-dot{background:var(--green);box-shadow:0 0 12px rgba(127,217,98,0.3)}
+.timeline-period{font-size:.7rem;color:var(--comment);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.timeline-company{font-size:1.1rem;color:var(--fg-bright);font-weight:600;margin-bottom:2px}
+.timeline-role{font-size:.85rem;color:var(--amber);margin-bottom:12px}
+.timeline-desc{font-size:.82rem;color:var(--fg);line-height:1.8}
+.timeline-desc li{margin-bottom:4px;list-style:none}
+.timeline-desc li::before{content:'→ ';color:var(--green)}
+.timeline-tech{margin-top:10px;display:flex;gap:6px;flex-wrap:wrap}
+.timeline-tech span{
+  font-size:.65rem;color:var(--cyan);padding:3px 10px;
+  border:1px solid var(--border);border-radius:2px;
+}
+
+/* === PROJECTS === */
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}
+.project-card{
+  background:var(--bg2);border:1px solid var(--border);border-radius:4px;
+  padding:24px;transition:border-color .3s,transform .3s,box-shadow .3s;
+  display:flex;flex-direction:column;
+}
+.project-card:hover{border-color:var(--border2);transform:translateY(-3px);box-shadow:0 8px 30px rgba(0,0,0,0.3)}
+.project-type{
+  font-size:.65rem;text-transform:uppercase;letter-spacing:1.5px;
+  margin-bottom:10px;display:inline-flex;align-items:center;gap:6px;
+}
+.project-type .dot{width:6px;height:6px;border-radius:50%}
+.project-type.mobile .dot{background:var(--cyan)}
+.project-type.mobile{color:var(--cyan)}
+.project-type.web .dot{background:var(--amber)}
+.project-type.web{color:var(--amber)}
+.project-title{font-size:1rem;color:var(--fg-bright);font-weight:600;margin-bottom:8px}
+.project-desc{font-size:.8rem;color:var(--comment);line-height:1.7;flex:1;margin-bottom:14px}
+.project-stack{display:flex;gap:6px;flex-wrap:wrap}
+.project-stack span{
+  font-size:.65rem;color:var(--fg);padding:3px 8px;
+  background:var(--bg3);border-radius:2px;
+}
+
+/* === CONTACT === */
+.contact-content{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+@media(max-width:700px){.contact-content{grid-template-columns:1fr;gap:32px}}
+.contact-text{font-size:.88rem;color:var(--fg);line-height:1.9}
+.contact-text p+p{margin-top:16px}
+.contact-links{display:flex;flex-direction:column;gap:12px}
+.contact-link{
+  display:flex;align-items:center;gap:16px;padding:16px 20px;
+  background:var(--bg2);border:1px solid var(--border);border-radius:4px;
+  transition:border-color .3s,box-shadow .3s;color:inherit;text-decoration:none;
+}
+.contact-link:hover{border-color:var(--green-dim);box-shadow:0 0 20px var(--green-glow)}
+.contact-link-icon{font-size:.75rem;color:var(--green);min-width:10ch}
+.contact-link-value{font-size:.85rem;color:var(--fg-bright)}
+
+/* === FOOTER === */
+footer{
+  border-top:1px solid var(--border);padding:40px 24px;text-align:center;
+  font-size:.75rem;color:var(--comment);
+}
+footer span{color:var(--green)}
+
+/* === FLOATING ELEMENTS === */
+.grid-bg{
+  position:fixed;inset:0;pointer-events:none;z-index:-1;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size:80px 80px;
+  opacity:0.25;
+  mask-image:radial-gradient(ellipse at 30% 50%, black 0%, transparent 70%);
+  -webkit-mask-image:radial-gradient(ellipse at 30% 50%, black 0%, transparent 70%);
+}
+[data-theme="light"] .grid-bg{opacity:0.12}
+[data-theme="light"] #vignette{display:none}
+
+/* Line numbers gutter on left */
+.gutter{
+  position:fixed;left:0;top:0;bottom:0;width:40px;
+  background:var(--bg2);border-right:1px solid var(--border);
+  z-index:50;display:flex;flex-direction:column;align-items:flex-end;
+  padding:60px 6px 0 0;font-size:.6rem;color:var(--comment);
+  line-height:2.4;overflow:hidden;user-select:none;-webkit-user-select:none;
+}
+@media(max-width:700px){.gutter{display:none}}
+@media(min-width:701px){
+  nav .nav-inner{margin-left:40px}
+  .hero,.section-wrap{padding-left:64px}
+  footer{padding-left:64px}
+}
+
+/* Scroll progress bar */
+#scroll-progress{
+  position:fixed;top:0;left:0;height:2px;background:var(--green);
+  z-index:200;width:0;transition:width .1s linear;
+}
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div id="scroll-progress"></div>
+
+<!-- LINE NUMBERS GUTTER -->
+<div class="gutter" id="gutter"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-inner">
+    <div class="nav-logo">aswin<span>.ranjith</span></div>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#about">about</a></li>
+      <li><a href="#skills">skills</a></li>
+      <li><a href="#experience">experience</a></li>
+      <li><a href="#projects">projects</a></li>
+      <li><a href="#contact">contact</a></li>
+    </ul>
+    <div style="display:flex;align-items:center;gap:16px">
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+        <em class="toggle-icon" id="toggle-icon">☽</em><span id="toggle-label">light</span>
+      </button>
+      <button class="nav-hamburger" id="hamburger" aria-label="Menu">☰</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="hero">
+  <div class="reveal">
+    <div class="hero-tag"><span>&gt;</span> ./portfolio --init</div>
+  </div>
+  <h1 class="hero-name reveal reveal-delay-1" id="hero-name"></h1>
+  <p class="hero-role reveal reveal-delay-2">Senior Software Developer @ FYERS Securities</p>
+  <p class="hero-summary reveal reveal-delay-3">
+    <strong>6 years</strong> building mobile and web applications.
+    From native <em style="color:var(--cyan);font-style:normal">iOS development</em> to full-stack
+    <em style="color:var(--cyan);font-style:normal">fintech platforms</em> — shipping products
+    that thousands of traders rely on every day.
+  </p>
+  <div class="hero-cta reveal reveal-delay-4">
+    <a href="#contact" class="btn btn-primary">> contact_me</a>
+    <a href="#projects" class="btn btn-ghost">view_projects</a>
+  </div>
+  <div class="hero-decoration">
+    <div>// portfolio.config</div>
+    <div>const name = "Aswin Ranjith";</div>
+    <div>const role = "Sr. Software Dev";</div>
+    <div>const yoe  = 6;</div>
+    <div>const loc  = "Bangalore, IN";</div>
+    <div>export default { name, role };</div>
+  </div>
+</header>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-wrap">
+    <div class="section-header reveal">
+      <div class="section-label">01 // about<span></span></div>
+      <h2 class="section-title"><span class="typewriter-title">Who I Am<span class="t-cursor"></span></span></h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-text reveal reveal-delay-1">
+        <p>I'm a software developer based in <em>Bangalore</em>, originally from <em>Kannur, Kerala</em>. Over the past six years, I've worked across <em>3 companies</em>, building products that span native iOS apps, cross-platform mobile applications, and modern web platforms.</p>
+        <p>My journey started with <em>Objective-C and Swift</em> — spending 1.4 years deep in native iOS development. That foundation in performance-first, platform-native thinking shapes everything I build today, even on the web.</p>
+        <p>Currently at <em>FYERS Securities</em>, I work on trading platforms where milliseconds matter and reliability is non-negotiable. I've shipped <em>4+ mobile applications</em> and <em>3 web applications</em> to production.</p>
+      </div>
+      <div class="about-card reveal reveal-delay-2">
+        <div class="about-card-bar">
+          <div class="about-card-dot r"></div>
+          <div class="about-card-dot y"></div>
+          <div class="about-card-dot g"></div>
+          <span class="about-card-title">~/about.json</span>
+        </div>
+        <div class="about-card-body">
+          <div class="comment">// quick facts</div>
+          <div class="line"><span class="key">"name"</span><span class="val">: "Aswin Ranjith",</span></div>
+          <div class="line"><span class="key">"role"</span><span class="val hl">: "Sr. Software Developer",</span></div>
+          <div class="line"><span class="key">"company"</span><span class="val">: "FYERS Securities",</span></div>
+          <div class="line"><span class="key">"experience"</span><span class="val">: "~6 years",</span></div>
+          <div class="line"><span class="key">"companies"</span><span class="val">: 3,</span></div>
+          <div class="line"><span class="key">"apps_built"</span><span class="val">: 4,</span></div>
+          <div class="line"><span class="key">"websites"</span><span class="val">: 3,</span></div>
+          <div class="line"><span class="key">"location"</span><span class="val">: "Bangalore, KA",</span></div>
+          <div class="line"><span class="key">"hometown"</span><span class="val">: "Kannur, Kerala"</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-wrap">
+    <div class="section-header reveal">
+      <div class="section-label">02 // skills<span></span></div>
+      <h2 class="section-title"><span class="typewriter-title">Tech Stack<span class="t-cursor"></span></span></h2>
+    </div>
+    <div class="skills-grid">
+
+      <div class="skill-item reveal reveal-delay-1" style="--w:90%">
+        <div class="skill-head"><span class="skill-name">Dart</span><span class="skill-pct" style="color:var(--cyan)">90%</span></div>
+        <div class="skill-bar"><div class="skill-fill" style="background:var(--cyan)"></div></div>
+        <div class="skill-tags"><span>Dart 3</span><span>Null Safety</span><span>Async/Await</span><span>Isolates</span></div>
+      </div>
+
+      <div class="skill-item reveal reveal-delay-2" style="--w:88%">
+        <div class="skill-head"><span class="skill-name">Flutter</span><span class="skill-pct" style="color:var(--blue)">88%</span></div>
+        <div class="skill-bar"><div class="skill-fill" style="background:var(--blue)"></div></div>
+        <div class="skill-tags"><span>Widgets</span><span>Bloc</span><span>Provider</span><span>Platform Channels</span></div>
+      </div>
+
+      <div class="skill-item reveal reveal-delay-3" style="--w:85%">
+        <div class="skill-head"><span class="skill-name">Swift</span><span class="skill-pct" style="color:var(--red)">85%</span></div>
+        <div class="skill-bar"><div class="skill-fill" style="background:var(--red)"></div></div>
+        <div class="skill-tags"><span>UIKit</span><span>SwiftUI</span><span>Core Data</span><span>SPM</span></div>
+      </div>
+
+      <div class="skill-item reveal reveal-delay-1" style="--w:80%">
+        <div class="skill-head"><span class="skill-name">Objective-C</span><span class="skill-pct" style="color:var(--amber)">80%</span></div>
+        <div class="skill-bar"><div class="skill-fill" style="background:var(--amber)"></div></div>
+        <div class="skill-tags"><span>Foundation</span><span>CocoaPods</span><span>MRC/ARC</span></div>
+      </div>
+
+      <div class="skill-item reveal reveal-delay-2" style="--w:88%">
+        <div class="skill-head"><span class="skill-name">HTML / CSS</span><span class="skill-pct" style="color:var(--magenta)">88%</span></div>
+        <div class="skill-bar"><div class="skill-fill" style="background:var(--magenta)"></div></div>
+        <div class="skill-tags"><span>Responsive</span><span>Flexbox</span><span>Grid</span><span>SASS</span></div>
+      </div>
+
+      <div class="skill-item reveal reveal-delay-3" style="--w:82%">
+        <div class="skill-head"><span class="skill-name">React</span><span class="skill-pct" style="color:var(--cyan)">82%</span></div>
+        <div class="skill-bar"><div class="skill-fill" style="background:var(--cyan)"></div></div>
+        <div class="skill-tags"><span>Hooks</span><span>Redux</span><span>Next.js</span></div>
+      </div>
+
+      <div class="skill-item reveal reveal-delay-1" style="--w:75%">
+        <div class="skill-head"><span class="skill-name">Node.js</span><span class="skill-pct" style="color:var(--green)">75%</span></div>
+        <div class="skill-bar"><div class="skill-fill" style="background:var(--green)"></div></div>
+        <div class="skill-tags"><span>Express</span><span>REST APIs</span><span>WebSocket</span></div>
+      </div>
+
+      <div class="skill-item reveal reveal-delay-2" style="--w:85%">
+        <div class="skill-head"><span class="skill-name">Git / CI-CD</span><span class="skill-pct" style="color:var(--fg)">85%</span></div>
+        <div class="skill-bar"><div class="skill-fill" style="background:var(--fg)"></div></div>
+        <div class="skill-tags"><span>GitHub</span><span>Bitbucket</span><span>Fastlane</span><span>Actions</span></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-wrap">
+    <div class="section-header reveal">
+      <div class="section-label">03 // experience<span></span></div>
+      <h2 class="section-title"><span class="typewriter-title">Work History<span class="t-cursor"></span></span></h2>
+    </div>
+    <div class="timeline">
+
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <div class="timeline-period">Present</div>
+        <div class="timeline-company">FYERS Securities Pvt. Ltd.</div>
+        <div class="timeline-role">Senior Software Developer — Bangalore</div>
+        <div class="timeline-desc">
+          <ul>
+            <li>Leading development of trading platforms across mobile and web</li>
+            <li>Architected and built a drag-and-drop, no-code algo trading platform within the FYERS app — a first-of-its-kind feature in the Indian broking industry, enabling traders to create and deploy strategies without writing a single line of code</li>
+            <li>Building high-performance fintech applications handling real-time market data streams</li>
+            <li>Architecting scalable front-end systems for active traders</li>
+            <li>Collaborating with cross-functional teams on product strategy and roadmap</li>
+          </ul>
+        </div>
+        <div class="timeline-tech"><span>Dart</span><span>Flutter</span><span>REST</span></div>
+      </div>
+
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <div class="timeline-period">Previous Role</div>
+        <div class="timeline-company">IOURING Private Limited</div>
+        <div class="timeline-role">Software Developer</div>
+        <div class="timeline-desc">
+          <ul>
+            <li>Developed a full-featured trading application in Flutter and Dart, shipped on both web and mobile platforms</li>
+            <li>Single-handedly built the eKYC onboarding platform from the ground up, directly responsible for acquiring over 20,000 clients for the company</li>
+            <li>Implemented Live Activity widgets for real-time portfolio data streaming on iOS lock screens</li>
+            <li>Integrated Push and Rich Push notifications across the mobile application</li>
+            <li>Built a native face recognition system using Google ML Kit for customer identity verification during onboarding — implemented separately for iOS, Android, and Web</li>
+            <li>Optimised application performance, reducing load times and improving overall responsiveness</li>
+          </ul>
+        </div>
+        <div class="timeline-tech"><span>Dart</span><span>Flutter</span><span>Google ML Kit</span><span>Live Activities</span><span>eKYC</span><span>REST</span></div>
+      </div>
+
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <div class="timeline-period">First Role</div>
+        <div class="timeline-company">Market Simplified</div>
+        <div class="timeline-role">iOS Developer</div>
+        <div class="timeline-desc">
+          <ul>
+            <li>Part of the team that developed a native iOS trading application from the ground up</li>
+            <li>Worked on analytics integration and tracking across the application</li>
+            <li>Contributed to core feature development including watchlists, order flow, and portfolio views</li>
+          </ul>
+        </div>
+        <div class="timeline-tech"><span>Objective-C</span><span>Swift</span><span>UIKit</span><span>Core Data</span><span>CocoaPods</span></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-wrap">
+    <div class="section-header reveal">
+      <div class="section-label">04 // projects<span></span></div>
+      <h2 class="section-title"><span class="typewriter-title">Things I've Built<span class="t-cursor"></span></span></h2>
+    </div>
+    <div class="projects-grid">
+
+      <div class="project-card reveal reveal-delay-1">
+        <div class="project-type mobile"><span class="dot"></span>mobile app</div>
+        <div class="project-title">Trading Platform — iOS</div>
+        <div class="project-desc">High-performance native trading app handling live market feeds, order execution, and portfolio management for retail traders.</div>
+        <div class="project-stack"><span>Swift</span><span>UIKit</span><span>WebSocket</span><span>Charts</span></div>
+      </div>
+
+      <div class="project-card reveal reveal-delay-2">
+        <div class="project-type mobile"><span class="dot"></span>mobile app</div>
+        <div class="project-title">Portfolio Tracker</div>
+        <div class="project-desc">Investment portfolio management app with real-time P&L tracking, analytics dashboards, and push notification alerts.</div>
+        <div class="project-stack"><span>Objective-C</span><span>Core Data</span><span>REST API</span></div>
+      </div>
+
+      <div class="project-card reveal reveal-delay-3">
+        <div class="project-type mobile"><span class="dot"></span>mobile app</div>
+        <div class="project-title">Cross-Platform App</div>
+        <div class="project-desc">Hybrid mobile application targeting both iOS and Android with shared business logic and platform-native UI components.</div>
+        <div class="project-stack"><span>React Native</span><span>Redux</span><span>Native Modules</span></div>
+      </div>
+
+      <div class="project-card reveal reveal-delay-1">
+        <div class="project-type mobile"><span class="dot"></span>mobile app</div>
+        <div class="project-title">Internal Utility App</div>
+        <div class="project-desc">Operations tooling app for internal teams — streamlining workflows, notifications, and task management.</div>
+        <div class="project-stack"><span>Swift</span><span>Firebase</span><span>Push Notifications</span></div>
+      </div>
+
+      <div class="project-card reveal reveal-delay-2">
+        <div class="project-type web"><span class="dot"></span>web app</div>
+        <div class="project-title">Trading Web Platform</div>
+        <div class="project-desc">Feature-rich browser-based trading terminal with real-time charting, order management, and live streaming market data.</div>
+        <div class="project-stack"><span>React</span><span>TypeScript</span><span>WebSocket</span><span>TradingView</span></div>
+      </div>
+
+      <div class="project-card reveal reveal-delay-3">
+        <div class="project-type web"><span class="dot"></span>web app</div>
+        <div class="project-title">Client Dashboard</div>
+        <div class="project-desc">Admin dashboard for client management, operational analytics, and reporting — used by internal teams daily.</div>
+        <div class="project-stack"><span>JavaScript</span><span>Node.js</span><span>REST API</span></div>
+      </div>
+
+      <div class="project-card reveal reveal-delay-1">
+        <div class="project-type web"><span class="dot"></span>web app</div>
+        <div class="project-title">Corporate Website</div>
+        <div class="project-desc">Responsive marketing website with performance optimization, SEO best practices, and modern design system.</div>
+        <div class="project-stack"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>SEO</span></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-wrap">
+    <div class="section-header reveal">
+      <div class="section-label">05 // contact<span></span></div>
+      <h2 class="section-title"><span class="typewriter-title">Get In Touch<span class="t-cursor"></span></span></h2>
+    </div>
+    <div class="contact-content">
+      <div class="contact-text reveal reveal-delay-1">
+        <p>I'm always open to interesting conversations — whether it's about a project, a role, open-source collaboration, or just talking shop about iOS and web development.</p>
+        <p>Currently based in Bangalore, but the best way to reach me is through any of the channels listed here. I'll get back to you.</p>
+      </div>
+      <div class="contact-links reveal reveal-delay-2">
+        <a class="contact-link" href="/cdn-cgi/l/email-protection#29485a5e4047181010105b484743405d41694e44484045074a4644">
+          <span class="contact-link-icon" style="color:var(--cyan)">email</span>
+          <span class="contact-link-value"><span class="__cf_email__" data-cfemail="0d6c7e7a64633c3434347f6c63676479654d6a606c6461236e6260">[email&#160;protected]</span></span>
+        </a>
+        <a class="contact-link" href="https://www.linkedin.com/in/aswin-ranjith-dev" target="_blank" rel="noopener">
+          <span class="contact-link-icon" style="color:var(--blue)">linkedin</span>
+          <span class="contact-link-value">linkedin.com/in/aswin-ranjith-dev</span>
+        </a>
+        <a class="contact-link" href="https://github.com/aswinzoro99" target="_blank" rel="noopener">
+          <span class="contact-link-icon" style="color:var(--fg)">github</span>
+          <span class="contact-link-value">github.com/aswinzoro99</span>
+        </a>
+        <div class="contact-link">
+          <span class="contact-link-icon" style="color:var(--green)">location</span>
+          <span class="contact-link-value">Bangalore, Karnataka, India</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p><span>&gt;</span> designed & built by <span>Aswin Ranjith</span> — 2024</p>
+  <p style="margin-top:6px">// crafted with code, shipped with care</p>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ── Scroll Reveal (IntersectionObserver) ──
+const revealEls = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+revealEls.forEach(el => observer.observe(el));
+
+// ── Typewriter titles on scroll ──
+const typewriterEls = document.querySelectorAll('.typewriter-title');
+const typeObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting && !entry.target.classList.contains('typed')) {
+      entry.target.classList.add('typed');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' });
+typewriterEls.forEach(el => typeObserver.observe(el));
+
+// ── Nav hide on scroll down, show on scroll up ──
+let lastScroll = 0;
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  const curr = window.scrollY;
+  if (curr > lastScroll && curr > 80) nav.classList.add('hidden');
+  else nav.classList.remove('hidden');
+  lastScroll = curr;
+}, { passive: true });
+
+// ── Hamburger ──
+const hamburger = document.getElementById('hamburger');
+const navLinks = document.getElementById('nav-links');
+hamburger.addEventListener('click', () => navLinks.classList.toggle('open'));
+
+// ── Nav link smooth scroll ──
+navLinks.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', (e) => {
+    e.preventDefault();
+    navLinks.classList.remove('open');
+    const targetId = a.getAttribute('href').substring(1);
+    const target = document.getElementById(targetId);
+    if (target) {
+      const offset = 70; // nav height
+      const top = target.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
+  });
+});
+
+// ── CTA button smooth scroll ──
+document.querySelectorAll('.btn[href^="#"]').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const targetId = btn.getAttribute('href').substring(1);
+    const target = document.getElementById(targetId);
+    if (target) {
+      const offset = 70;
+      const top = target.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
+  });
+});
+
+// ── Scroll progress bar ──
+const progressBar = document.getElementById('scroll-progress');
+window.addEventListener('scroll', () => {
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  const pct = h > 0 ? (window.scrollY / h) * 100 : 0;
+  progressBar.style.width = pct + '%';
+}, { passive: true });
+
+// ── Line numbers gutter ──
+const gutter = document.getElementById('gutter');
+function generateLineNumbers() {
+  const totalLines = Math.ceil(document.documentElement.scrollHeight / 24);
+  let html = '';
+  for (let i = 1; i <= Math.min(totalLines, 500); i++) {
+    html += i + '<br>';
+  }
+  gutter.innerHTML = html;
+}
+generateLineNumbers();
+window.addEventListener('resize', generateLineNumbers);
+
+// Sync gutter scroll
+window.addEventListener('scroll', () => {
+  const pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+  gutter.scrollTop = pct * (gutter.scrollHeight - gutter.clientHeight);
+}, { passive: true });
+
+// ── Trigger hero reveals immediately ──
+document.querySelectorAll('.hero .reveal').forEach((el, i) => {
+  setTimeout(() => el.classList.add('visible'), 200 + i * 120);
+});
+
+// ── Hero name typewriter ──
+(function() {
+  const heroName = document.getElementById('hero-name');
+  const lines = [
+    { text: 'Aswin', cls: '' },
+    { text: 'Ranjith', cls: 'accent' }
+  ];
+  let lineIdx = 0, charIdx = 0;
+  const speed = 70;
+  const startDelay = 700;
+
+  function typeHeroName() {
+    if (lineIdx >= lines.length) {
+      // Add blinking cursor at end
+      const cur = document.createElement('span');
+      cur.className = 'cursor-blink';
+      heroName.appendChild(cur);
+      return;
+    }
+    const line = lines[lineIdx];
+    if (charIdx === 0 && lineIdx > 0) {
+      heroName.appendChild(document.createElement('br'));
+    }
+    if (charIdx === 0) {
+      const span = document.createElement('span');
+      span.className = line.cls;
+      span.id = 'hero-line-' + lineIdx;
+      heroName.appendChild(span);
+    }
+    const span = document.getElementById('hero-line-' + lineIdx);
+    if (charIdx < line.text.length) {
+      span.textContent += line.text[charIdx];
+      charIdx++;
+      setTimeout(typeHeroName, speed);
+    } else {
+      lineIdx++;
+      charIdx = 0;
+      setTimeout(typeHeroName, 150);
+    }
+  }
+  setTimeout(typeHeroName, startDelay);
+})();
+
+// ── Theme toggle ──
+(function() {
+  const toggle = document.getElementById('theme-toggle');
+  const icon = document.getElementById('toggle-icon');
+  const label = document.getElementById('toggle-label');
+  const html = document.documentElement;
+  let currentTheme = 'dark';
+
+  function applyTheme(theme) {
+    html.classList.add('theme-transitioning');
+    currentTheme = theme;
+    if (theme === 'light') {
+      html.setAttribute('data-theme', 'light');
+      icon.textContent = '\u2600';
+      label.textContent = 'dark';
+    } else {
+      html.removeAttribute('data-theme');
+      icon.textContent = '\u263D';
+      label.textContent = 'light';
+    }
+    try { localStorage.setItem('portfolio-theme', theme); } catch(e) {}
+    setTimeout(() => html.classList.remove('theme-transitioning'), 450);
+  }
+
+  // Try to load saved preference
+  try {
+    const saved = localStorage.getItem('portfolio-theme');
+    if (saved === 'light') applyTheme('light');
+  } catch(e) {}
+
+  toggle.addEventListener('click', () => {
+    applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+  });
+})();
+</script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"75124c326cb447fe934cde04713ae013","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+</html>
